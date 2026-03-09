@@ -1,0 +1,64 @@
+<div class="product-list-container">
+  <div class="filters-section">
+    <h2>Filters</h2>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search Products</mat-label>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Search by name or description">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="category-filter">
+      <h3>Category</h3>
+      <mat-chip-set>
+        <button mat-stroked-button
+          (click)="selectedCategory = 'all'"
+          [class.active]="selectedCategory === 'all'"
+          class="category-chip">
+          All Products
+        </button>
+        <button mat-stroked-button
+          *ngFor="let category of categories"
+          (click)="selectedCategory = category.id"
+          [class.active]="selectedCategory === category.id"
+          class="category-chip">
+          {{ category.name }}
+        </button>
+      </mat-chip-set>
+    </div>
+
+    <div class="stock-filter">
+      <mat-checkbox [(ngModel)]="inStockOnly">In Stock Only</mat-checkbox>
+    </div>
+
+    <button mat-raised-button color="accent" (click)="resetFilters()" class="reset-btn">
+      <mat-icon>refresh</mat-icon>
+      Reset Filters
+    </button>
+  </div>
+
+  <div class="products-section">
+    <div class="section-header">
+      <h2>Our Products</h2>
+      <p class="product-count">
+        Showing {{ (products | filterByCategory: selectedCategory | searchProducts: searchTerm | inStock: inStockOnly)?.length }} products
+      </p>
+    </div>
+
+    <mat-grid-list [cols]="cols" rowHeight="450px" gutterSize="20px" class="products-grid">
+      <mat-grid-tile
+        *ngFor="let product of products | filterByCategory: selectedCategory | searchProducts: searchTerm | inStock: inStockOnly"
+        [appOutOfStock]="!product.inStock">
+        <app-product-card
+          [product]="product"
+          (addToCart)="onAddToCart($event)">
+        </app-product-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <div class="no-products" *ngIf="(products | filterByCategory: selectedCategory | searchProducts: searchTerm | inStock: inStockOnly)?.length === 0">
+      <mat-icon>inventory_2</mat-icon>
+      <p>No products found matching your filters.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<mat-card class="product-card" [appHighlightDiscount]="product.discount">
+  <div class="product-image-container">
+    <img [src]="product.image" [alt]="product.name" class="product-image">
+    <div class="discount-badge" *ngIf="product.discount">
+      -{{ product.discount }}%
+    </div>
+    <div class="stock-badge" *ngIf="!product.inStock">
+      Out of Stock
+    </div>
+  </div>
+
+  <mat-card-content class="product-content">
+    <h3 class="product-name">{{ product.name }}</h3>
+    <p class="product-description">{{ product.description }}</p>
+
+    <div class="product-meta">
+      <div class="rating-stars">
+        <span *ngFor="let i of [1,2,3,4,5]" class="star" [class.filled]="i <= product.rating">★</span>
+      </div>
+      <span class="review-count">({{ product.reviews }} reviews)</span>
+    </div>
+
+    <div class="price-section">
+      <div class="price">
+        <span class="current-price" [appPriceHighlight]="product.price">{{ product.price | currency }}</span>
+        <span class="original-price" *ngIf="product.originalPrice">
+          {{ product.originalPrice | currency }}
+        </span>
+      </div>
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!product.inStock"
+      (click)="addToCart.emit(product)"
+      class="add-to-cart-btn">
+      <mat-icon>shopping_cart</mat-icon>
+      {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
+    </button>
+
+    <a
+      [routerLink]="['/product', product.id]"
+      mat-button
+      color="accent"
+      class="details-btn">
+      <mat-icon>info</mat-icon>
+      View Details
+    </a>
+  </mat-card-content>
+</mat-card>

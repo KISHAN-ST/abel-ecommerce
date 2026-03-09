@@ -1,0 +1,108 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>
+      <mat-icon>add_box</mat-icon>
+      Add Product (Admin)
+    </h1>
+    <a mat-button routerLink="/products">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Products
+    </a>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-header>
+      <h2>New Product</h2>
+      <p>Fill in the form below. Price must be between {{ minPrice | currency }} and {{ maxPrice | currency }}.</p>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Product Name</mat-label>
+          <input matInput name="name" [(ngModel)]="model.name" #name="ngModel" required minlength="2">
+          <mat-error *ngIf="name.invalid && name.touched">
+            <span *ngIf="name.errors?.['required']">Name is required.</span>
+            <span *ngIf="name.errors?.['minlength']">At least 2 characters.</span>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput name="description" [(ngModel)]="model.description" #desc="ngModel" required rows="3"></textarea>
+          <mat-error *ngIf="desc.invalid && desc.touched">Description is required.</mat-error>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Price (required)</mat-label>
+            <input matInput type="number" name="price" [(ngModel)]="model.price" #price="ngModel"
+                   required min="{{ minPrice }}" max="{{ maxPrice }}" step="0.01">
+            <mat-error *ngIf="price.invalid && price.touched">
+              <span *ngIf="price.errors?.['required']">Price is required.</span>
+              <span *ngIf="price.errors?.['min'] || price.errors?.['max']">Price must be between {{ minPrice }} and {{ maxPrice }}.</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Original Price (optional)</mat-label>
+            <input matInput type="number" name="originalPrice" [(ngModel)]="model.originalPrice" min="0" step="0.01">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select name="category" [(ngModel)]="model.category" #cat="ngModel" required>
+              <mat-option value="">-- Select --</mat-option>
+              <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="cat.invalid && cat.touched">Category is required.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Image URL</mat-label>
+            <input matInput name="image" [(ngModel)]="model.image" placeholder="https://...">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Quantity</mat-label>
+            <input matInput type="number" name="quantity" [(ngModel)]="model.quantity" min="0">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rating (1-5)</mat-label>
+            <input matInput type="number" name="rating" [(ngModel)]="model.rating" min="0" max="5" step="0.1">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Discount % (optional)</mat-label>
+            <input matInput type="number" name="discount" [(ngModel)]="model.discount" min="0" max="100" step="1">
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Release Date</mat-label>
+          <input matInput type="date" name="releaseDate" [(ngModel)]="model.releaseDate">
+        </mat-form-field>
+
+        <div class="checkbox-row">
+          <mat-checkbox name="inStock" [(ngModel)]="model.inStock">In Stock</mat-checkbox>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">
+            <mat-icon>add</mat-icon>
+            Add Product
+          </button>
+          <button mat-button type="button" (click)="productForm.reset()">
+            <mat-icon>clear</mat-icon>
+            Reset
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
